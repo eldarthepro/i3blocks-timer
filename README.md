@@ -4,7 +4,7 @@ To have sound notifications for break and resume add "break.ogg" and
 PLEASE CHANGE line 9 of this script and input path to script and sounds directory.
 After first start left click new box to start timer and create time file.
 Left click to reset, right click to stop.
-Add to i3Blocks config:
+Add to i3blocks config:
 
 [timer]
 command=$SCRIPT_DIR/timer
