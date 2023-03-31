@@ -6,10 +6,9 @@ After first start left click new box to start timer and create time file.
 Left click to reset, right click to stop.
 Add to i3blocks config:
 
-[timer]
-command=$SCRIPT_DIR/timer
-label=
-interval=60
-DEFAULT_WORKTIME=45
-DEFAULT_BREAKTIME=10
-
+[timer]  
+command=$SCRIPT_DIR/timer  
+label=  
+interval=60  
+DEFAULT_WORKTIME=45  
+DEFAULT_BREAKTIME=10  
