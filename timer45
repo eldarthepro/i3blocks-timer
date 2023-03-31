@@ -1,0 +1,67 @@
+#! /usr/bin/env sh
+
+#folder where script is, file time and sound resources.
+#Add (name) file with sound to begin a break
+#"break.ogg" and to get back to work "towork.ogg".
+#"sox" package is required for playback using "play".
+#After first launch file left click block, "time"
+#file will be added to script directory.
+declare dir="$SCRIPT_DIR/timer";
+
+#minutes to work
+declare -i worktime;
+DEFAULT_WORKTIME=${DEFAULT_WORKTIME:0}
+
+#minutes to rest
+declare -i breaktime;
+DEFAULT_BREAKTIME=${DEFAULT_BREAKTIME:0}
+
+#return string
+declare TITLE;
+
+read worktime breaktime < "$dir/time";
+
+if(($worktime > 0))
+then
+  TITLE="$worktime minutes (work)";
+  echo "$((worktime-1)) $breaktime" > "$dir/time";
+fi
+
+if (($worktime == 0))
+then 
+  if (($breaktime == $DEFAULT_BREAKTIME))
+  then  
+    play $dir/break.ogg 2>/dev/null;
+  fi
+
+  if (($breaktime > 0))
+  then    
+    TITLE="$breaktime minutes (break)";
+    echo "$worktime $((breaktime-1))" > "$dir/time";
+  fi
+fi
+
+if (($breaktime == 0))
+then
+ play $dir/towork.ogg 2>/dev/null;
+ worktime=$DEFAULT_WORKTIME;
+ TITLE="$worktime minutes (work)";
+ notify-send -a timer "$worktime minutes to work!" $(date +"%H:%M" -d "$worktime minutes");
+ echo "$(($DEFAULT_WORKTIME-1)) $DEFAULT_BREAKTIME" > "$dir/time";
+fi
+
+if(($worktime == -1)) && (($breaktime == -1))
+then
+  TITLE="off"
+fi
+
+case $BLOCK_BUTTON in
+  1) echo "$DEFAULT_WORKTIME $DEFAULT_BREAKTIME"  > "$dir/time";
+     TITLE="$DEFAULT_WORKTIME minutes (work)";; # left click
+  3) echo "-1 -1" > "$dir/time";
+     TITLE="off";; # right click
+  2|4|5|6|7|8|9|10) echo "$worktime $breaktime" > "$dir/time";;
+esac
+
+echo "$TITLE";
+exit 0;
